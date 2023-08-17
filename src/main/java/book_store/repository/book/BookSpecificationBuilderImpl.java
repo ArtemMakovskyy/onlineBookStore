@@ -5,7 +5,6 @@ import book_store.model.Book;
 import book_store.repository.SpecificationBuilder;
 import book_store.repository.SpecificationProviderManager;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;

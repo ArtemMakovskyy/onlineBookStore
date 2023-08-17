@@ -1,5 +1,6 @@
 package book_store.repository.book.spec;
 
+import java.util.Arrays;
 import book_store.model.Book;
 import book_store.repository.SpecificationProvider;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -8,8 +9,6 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
 
 @Component
 public class TitleSpecificationProvider implements SpecificationProvider<Book> {

@@ -1,7 +1,6 @@
 package book_store.dto;
 
 import lombok.Data;
-
 import java.math.BigDecimal;
 
 @Data
