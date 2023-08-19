@@ -1,14 +1,16 @@
 package online.book.store;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class OnlineBookStoreApplication {
-    private static final String SWAGGER_LINK = "http://localhost:8080/swagger-ui/index.html";
+    private static final Logger logger = LogManager.getLogger(OnlineBookStoreApplication.class);
 
     public static void main(String[] args) {
         SpringApplication.run(online.book.store.OnlineBookStoreApplication.class, args);
-        System.out.println("API Documentation Overview - " + SWAGGER_LINK);
+        logger.info("API Documentation Overview: http://localhost:8080/swagger-ui/index.html");
     }
 }

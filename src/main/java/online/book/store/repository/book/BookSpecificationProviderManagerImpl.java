@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class BookSpecificationProviderManagerImpl implements SpecificationProviderManager<Book> {
-    private final List<SpecificationProvider<Book>> phoneSpecificationProviders;
+    private final List<SpecificationProvider<Book>> bookSpecificationProviders;
 
     @Override
     public SpecificationProvider<Book> getSpecificationProvider(String key) {
-        return phoneSpecificationProviders.stream()
+        return bookSpecificationProviders.stream()
                 .filter(b -> b.getKey().equals(key))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException(

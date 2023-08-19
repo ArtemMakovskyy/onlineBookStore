@@ -1,7 +1,7 @@
 package online.book.store.repository.book;
 
 import lombok.RequiredArgsConstructor;
-import online.book.store.dto.BookSearchParameters;
+import online.book.store.dto.BookSearchParametersDto;
 import online.book.store.model.Book;
 import online.book.store.repository.SpecificationBuilder;
 import online.book.store.repository.SpecificationProviderManager;
@@ -21,7 +21,7 @@ public class BookSpecificationBuilderImpl implements SpecificationBuilder<Book> 
     private final SpecificationProviderManager<Book> bookSpecificationProviderManager;
 
     @Override
-    public Specification<Book> build(BookSearchParameters searchParameters) {
+    public Specification<Book> build(BookSearchParametersDto searchParameters) {
         Specification<Book> spec = Specification.where(null);
         if (searchParameters.title() != null && searchParameters.title().length > 0) {
             spec = spec.and(bookSpecificationProviderManager

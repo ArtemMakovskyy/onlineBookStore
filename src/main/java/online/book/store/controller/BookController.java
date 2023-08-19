@@ -6,10 +6,12 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import online.book.store.dto.BookDto;
-import online.book.store.dto.BookSearchParameters;
+import online.book.store.dto.BookSearchParametersDto;
 import online.book.store.dto.CreateBookRequestDto;
+import online.book.store.mapper.BookMapper;
+import online.book.store.repository.book.BookRepository;
 import online.book.store.service.BookService;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,6 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/books")
 public class BookController {
     private final BookService bookService;
+    private final BookRepository bookRepository;
+    private final BookMapper bookMapper;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -39,11 +44,15 @@ public class BookController {
     }
 
     @GetMapping
-    @Operation(summary = "Getting all available books.",
-            description = "Retrieve all available books, "
+    @Operation(summary = "Getting page available books.",
+            description = "Retrieve page with available books. "
+                    + "By default it is first page with 5 books, sorted ASC"
                     + "except those deleted using soft delete.")
-    public List<BookDto> getAllBooks(Pageable pageable) {
-        return bookService.findAll(pageable);
+    public Page<BookDto> getAllBooks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "price,ASC") String sort) {
+        return bookService.findAll(page, size, sort);
     }
 
     @GetMapping("/{id}")
@@ -75,7 +84,7 @@ public class BookController {
     @Operation(summary = "Book search by parameters.",
             description = "Search available books using criteria by parameters : title, "
                     + "author,isbn, price, except those deleted using soft delete.")
-    public List<BookDto> searchBooks(BookSearchParameters searchParameters) {
+    public List<BookDto> searchBooks(BookSearchParametersDto searchParameters) {
         return bookService.search(searchParameters);
     }
 }

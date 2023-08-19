@@ -3,7 +3,7 @@ package online.book.store.service.impl;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import online.book.store.dto.BookDto;
-import online.book.store.dto.BookSearchParameters;
+import online.book.store.dto.BookSearchParametersDto;
 import online.book.store.dto.CreateBookRequestDto;
 import online.book.store.exception.EntityNotFoundException;
 import online.book.store.mapper.BookMapper;
@@ -11,7 +11,10 @@ import online.book.store.model.Book;
 import online.book.store.repository.book.BookRepository;
 import online.book.store.repository.book.BookSpecificationBuilderImpl;
 import online.book.store.service.BookService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -29,10 +32,16 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> findAll(Pageable pageable) {
-        return bookRepository.findAll(pageable).stream()
-                .map(bookMapper::toDto)
-                .toList();
+    public Page<BookDto> findAll(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(parseSortOrder(sort)));
+        return bookRepository.findAll(pageable).map(bookMapper::toDto);
+    }
+
+    private Sort.Order parseSortOrder(String sort) {
+        String[] parts = sort.split(",");
+        String property = parts[0];
+        String direction = parts[1].toUpperCase();
+        return new Sort.Order(Sort.Direction.valueOf(direction), property);
     }
 
     @Override
@@ -58,7 +67,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> search(BookSearchParameters searchParams) {
+    public List<BookDto> search(BookSearchParametersDto searchParams) {
         Specification<Book> bookSpecification = bookSpecificationBuilder.build(searchParams);
         return bookRepository.findAll(bookSpecification).stream()
                 .map(bookMapper::toDto)

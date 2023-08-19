@@ -1,5 +1,6 @@
 package online.book.store.repository.book.spec;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Stream;
 import online.book.store.model.Book;
@@ -17,9 +18,10 @@ public class PriceSpecificationProvider implements SpecificationProvider<Book> {
     }
 
     public Specification<Book> getSpecification(String[] params) {
-        List<Double> doubles = Stream.of(params).map(Double::valueOf).sorted().toList();
-        String priceFrom = String.valueOf(doubles.get(0));
-        String priceTo = String.valueOf(doubles.get(doubles.size() - 1));
+        final List<BigDecimal> priceParams
+                = Stream.of(params).map(BigDecimal::new).sorted().toList();
+        String priceFrom = String.valueOf(priceParams.get(0));
+        String priceTo = String.valueOf(priceParams.get(priceParams.size() - 1));
         return (root, query, criteriaBuilder)
                 -> criteriaBuilder.between(root.get(PRICE_KEY), priceFrom, priceTo);
     }

@@ -1,5 +1,7 @@
 HELP.md
 target/
+src/main/java/criteria/spec/
+src/main/java/exsercise/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
