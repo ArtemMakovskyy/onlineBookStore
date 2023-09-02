@@ -5,14 +5,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import online.book.store.dto.BookDto;
-import online.book.store.dto.BookSearchParametersDto;
-import online.book.store.dto.CreateBookRequestDto;
+import online.book.store.dto.book.BookDto;
+import online.book.store.dto.book.BookSearchParametersDto;
+import online.book.store.dto.book.CreateBookRequestDto;
 import online.book.store.mapper.BookMapper;
 import online.book.store.repository.book.BookRepository;
 import online.book.store.service.BookService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Book management", description = "Endpoints to managing books")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/books")
+@RequestMapping("/books")
 public class BookController {
     private final BookService bookService;
     private final BookRepository bookRepository;
@@ -35,6 +36,7 @@ public class BookController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Creating a new book.",
             description = "Creating a new book with valid data. "
                     + "Title, author, isbn should be not blank and in addition, "
@@ -44,6 +46,7 @@ public class BookController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Getting page available books.",
             description = "Retrieve page with available books. "
                     + "By default it is first page with 5 books, sorted ASC"
@@ -56,6 +59,7 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Getting available book by id.",
             description = "Retrieve available book by id, "
                     + "if it has not been deleted with soft delete.")
@@ -65,6 +69,7 @@ public class BookController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Deleting book by id",
             description = "Soft deleting available book by id")
     public void deleteBookById(@PathVariable Long id) {
@@ -72,6 +77,7 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Updating book by id",
             description = "Updating available book by id, "
                     + "except those deleted using soft delete.")
@@ -81,6 +87,7 @@ public class BookController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Book search by parameters.",
             description = "Search available books using criteria by parameters : title, "
                     + "author,isbn, price, except those deleted using soft delete.")
