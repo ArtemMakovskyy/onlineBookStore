@@ -3,6 +3,7 @@ package online.book.store.service.impl;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import online.book.store.dto.book.BookDto;
+import online.book.store.dto.book.BookDtoWithoutCategoryIds;
 import online.book.store.dto.book.BookSearchParametersDto;
 import online.book.store.dto.book.CreateBookRequestDto;
 import online.book.store.exception.EntityNotFoundException;
@@ -26,9 +27,10 @@ public class BookServiceImpl implements BookService {
     private final BookSpecificationBuilderImpl bookSpecificationBuilder;
 
     @Override
-    public BookDto save(CreateBookRequestDto requestDto) {
-        Book savedBook = bookRepository.save(bookMapper.toModel(requestDto));
-        return bookMapper.toDto(savedBook);
+    public BookDto getBookById(Long id) {
+        return bookMapper.toDto(bookRepository.getBookById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Can't get book by id " + id)));
     }
 
     @Override
@@ -45,12 +47,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto getBookById(Long id) {
-        return bookMapper.toDto(bookRepository.getBookById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Can't get book by id " + id)));
-    }
-
-    @Override
     public void deleteById(Long id) {
         bookRepository.deleteById(id);
     }
@@ -58,7 +54,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto update(Long id, CreateBookRequestDto requestDto) {
         if (bookRepository.existsById(id)) {
-            Book book = bookMapper.toModel(requestDto);
+            Book book = bookMapper.toEntity(requestDto);
             book.setId(id);
             Book savedBook = bookRepository.save(book);
             return bookMapper.toDto(savedBook);
@@ -72,5 +68,19 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findAll(bookSpecification).stream()
                 .map(bookMapper::toDto)
                 .toList();
+    }
+
+    @Override
+    public List<BookDtoWithoutCategoryIds> findAllByCategory(Long id) {
+        return bookRepository.findAllByCategoriesId(id).stream()
+                .map(bookMapper::toDtoWithoutCategories)
+                .toList();
+    }
+
+    @Override
+    public BookDto save(CreateBookRequestDto requestDto) {
+        System.out.println(requestDto);
+        Book savedBook = bookRepository.save(bookMapper.toEntity(requestDto));
+        return bookMapper.toDto(savedBook);
     }
 }

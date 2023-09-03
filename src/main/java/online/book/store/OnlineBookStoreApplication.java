@@ -11,6 +11,6 @@ public class OnlineBookStoreApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(online.book.store.OnlineBookStoreApplication.class, args);
-        logger.info("API Documentation Overview: http://localhost:8080/swagger-ui/index.html");
+        logger.info("API Documentation Overview: http://localhost:8080/api/swagger-ui/index.html#/");
     }
 }

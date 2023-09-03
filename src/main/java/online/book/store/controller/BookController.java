@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import online.book.store.dto.book.BookDto;
 import online.book.store.dto.book.BookSearchParametersDto;
 import online.book.store.dto.book.CreateBookRequestDto;
-import online.book.store.mapper.BookMapper;
-import online.book.store.repository.book.BookRepository;
 import online.book.store.service.BookService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -31,17 +29,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/books")
 public class BookController {
     private final BookService bookService;
-    private final BookRepository bookRepository;
-    private final BookMapper bookMapper;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Creating a new book.",
             description = "Creating a new book with valid data. "
                     + "Title, author, isbn should be not blank and in addition, "
                     + "isbn must be unique.")
+    @PostMapping
     public BookDto createBook(@RequestBody @Valid CreateBookRequestDto bookDto) {
+        System.out.println(bookDto);
         return bookService.save(bookDto);
     }
 
@@ -72,7 +70,8 @@ public class BookController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Deleting book by id",
             description = "Soft deleting available book by id")
-    public void deleteBookById(@PathVariable Long id) {
+    public void deleteBookById(
+            @PathVariable Long id) {
         bookService.deleteById(id);
     }
 
@@ -81,8 +80,9 @@ public class BookController {
     @Operation(summary = "Updating book by id",
             description = "Updating available book by id, "
                     + "except those deleted using soft delete.")
-    public BookDto updateBook(@PathVariable Long id,
-                              @RequestBody @Valid CreateBookRequestDto requestDto) {
+    public BookDto updateBook(
+            @PathVariable Long id,
+            @RequestBody @Valid CreateBookRequestDto requestDto) {
         return bookService.update(id, requestDto);
     }
 
