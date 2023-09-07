@@ -3,13 +3,13 @@ package online.book.store.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import online.book.store.dto.book.BookDto;
 import online.book.store.dto.book.BookSearchParametersDto;
 import online.book.store.dto.book.CreateBookRequestDto;
 import online.book.store.service.BookService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,16 +30,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookController {
     private final BookService bookService;
 
-    @ResponseStatus(HttpStatus.CREATED)
-
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Creating a new book.",
             description = "Creating a new book with valid data. "
                     + "Title, author, isbn should be not blank and in addition, "
                     + "isbn must be unique.")
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public BookDto createBook(@RequestBody @Valid CreateBookRequestDto bookDto) {
-        System.out.println(bookDto);
         return bookService.save(bookDto);
     }
 
@@ -91,7 +89,7 @@ public class BookController {
     @Operation(summary = "Book search by parameters.",
             description = "Search available books using criteria by parameters : title, "
                     + "author,isbn, price, except those deleted using soft delete.")
-    public List<BookDto> searchBooks(BookSearchParametersDto searchParameters) {
-        return bookService.search(searchParameters);
+    public Page<BookDto> searchBooks(BookSearchParametersDto searchParameters, Pageable pageable) {
+        return bookService.search(searchParameters, pageable);
     }
 }

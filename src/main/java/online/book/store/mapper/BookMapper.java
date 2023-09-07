@@ -35,13 +35,12 @@ public interface BookMapper {
     @AfterMapping
     default void setCategoriesIntoBook(@MappingTarget Book book, CreateBookRequestDto createDto) {
         if (!createDto.getCategories().isEmpty()) {
-            Set<Category> categories = new HashSet<>();
-            final Set<Category> collect = new HashSet<>();
+            final Set<Category> categories = new HashSet<>();
             for (Long id : createDto.getCategories()) {
                 Category category = new Category(id);
-                collect.add(category);
+                categories.add(category);
             }
-            book.setCategories(collect);
+            book.setCategories(categories);
         }
     }
 }

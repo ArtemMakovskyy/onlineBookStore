@@ -1,12 +1,12 @@
 package online.book.store.service;
 
-import java.util.List;
 import online.book.store.dto.category.CategoryDto;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface CategoryService {
-    List<CategoryDto> findAll();
+    Page<CategoryDto> findAll(int page, int size, String sort);
 
     CategoryDto getById(Long id);
 

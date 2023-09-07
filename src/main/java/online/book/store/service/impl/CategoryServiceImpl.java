@@ -10,6 +10,11 @@ import online.book.store.model.Category;
 import online.book.store.repository.book.BookRepository;
 import online.book.store.repository.category.CategoryRepository;
 import online.book.store.service.CategoryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,10 +26,12 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryMapper categoryMapper;
 
     @Override
-    public List<CategoryDto> findAll() {
-        return categoryRepository.findAll().stream()
+    public Page<CategoryDto> findAll(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(parseSortOrder(sort)));
+        final List<CategoryDto> categoryDtos = categoryRepository.findAll(pageable).stream()
                 .map(categoryMapper::toDto)
                 .toList();
+        return new PageImpl<>(categoryDtos,pageable,categoryDtos.stream().count());
     }
 
     @Override
@@ -57,5 +64,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteById(Long id) {
         categoryRepository.deleteById(id);
+    }
+
+    private Sort.Order parseSortOrder(String sort) {
+        String[] parts = sort.split(",");
+        String property = parts[0];
+        String direction = parts[1].toUpperCase();
+        return new Sort.Order(Sort.Direction.valueOf(direction), property);
     }
 }

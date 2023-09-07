@@ -1,6 +1,7 @@
 package online.book.store.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import online.book.store.dto.book.BookDto;
 import online.book.store.dto.book.BookDtoWithoutCategoryIds;
@@ -13,6 +14,7 @@ import online.book.store.repository.book.BookRepository;
 import online.book.store.repository.book.BookSpecificationBuilderImpl;
 import online.book.store.service.BookService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -36,7 +38,11 @@ public class BookServiceImpl implements BookService {
     @Override
     public Page<BookDto> findAll(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(parseSortOrder(sort)));
-        return bookRepository.findAll(pageable).map(bookMapper::toDto);
+        final List<BookDto> bookDtoList = bookRepository.findAll(pageable)
+                .stream()
+                .map(bookMapper::toDto)
+                .collect(Collectors.toList());
+        return new PageImpl<>(bookDtoList, pageable, bookRepository.count());
     }
 
     private Sort.Order parseSortOrder(String sort) {
@@ -63,18 +69,20 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> search(BookSearchParametersDto searchParams) {
+    public Page<BookDto> search(BookSearchParametersDto searchParams, Pageable pageable) {
         Specification<Book> bookSpecification = bookSpecificationBuilder.build(searchParams);
-        return bookRepository.findAll(bookSpecification).stream()
-                .map(bookMapper::toDto)
-                .toList();
+        return bookRepository.findAll(bookSpecification, pageable)
+                .map(bookMapper::toDto);
     }
 
     @Override
-    public List<BookDtoWithoutCategoryIds> findAllByCategory(Long id) {
-        return bookRepository.findAllByCategoriesId(id).stream()
-                .map(bookMapper::toDtoWithoutCategories)
-                .toList();
+    public Page<BookDtoWithoutCategoryIds> findAllByCategory(
+            Long id, int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(parseSortOrder(sort)));
+        final List<BookDtoWithoutCategoryIds> bookDtoWithoutCategoryIds
+                = bookRepository.findAllByCategoriesId(id, pageable).stream()
+                .map(bookMapper::toDtoWithoutCategories).toList();
+        return new PageImpl<>(bookDtoWithoutCategoryIds, pageable, bookRepository.count());
     }
 
     @Override
