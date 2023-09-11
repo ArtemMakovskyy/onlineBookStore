@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-shopping_carts-table
+      author: artemmakovskyy
+      changes:
+        - createTable:
+            tableName: shopping_carts
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    foreignKeyName: fk_shopping_carts_users
+                    referencedTableName: users
+                    referencedColumnNames:  id
+                    nullable:  false
+#              - column:
+#                  name: id
+#                  type: bigint
+#                  autoIncrement: true
+#                  constraints:
+#                    primaryKey: true
+#                    nullable: false

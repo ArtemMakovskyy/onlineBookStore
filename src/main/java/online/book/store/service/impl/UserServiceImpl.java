@@ -7,8 +7,10 @@ import online.book.store.dto.user.UserResponseDto;
 import online.book.store.exception.RegistrationException;
 import online.book.store.mapper.UserMapper;
 import online.book.store.model.Role;
+import online.book.store.model.ShoppingCart;
 import online.book.store.model.User;
 import online.book.store.repository.role.RoleRepository;
+import online.book.store.repository.shopping.cart.ShoppingCartRepository;
 import online.book.store.repository.user.UserRepository;
 import online.book.store.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final ShoppingCartRepository shoppingCartRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
@@ -38,6 +41,10 @@ public class UserServiceImpl implements UserService {
                 roleRepository.findById(2L).orElseThrow(
                         () -> new RuntimeException("Can't find ROLE_USER by id"));
         user.setRoles(Set.of(roleUser));
+        // TODO: 14.09.2023 Create ShoppingCart
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setUser(user);
+        shoppingCartRepository.save(shoppingCart);
         final User savedUser = userRepository.save(user);
         return userMapper.toDto(savedUser);
     }
