@@ -44,8 +44,7 @@ public class Category {
         }
         Category category = (Category) o;
         return Objects.equals(id, category.id)
-                && Objects.equals(name, category.name)
-                && Objects.equals(description, category.description);
+                && Objects.equals(name, category.name);
     }
 
     @Override

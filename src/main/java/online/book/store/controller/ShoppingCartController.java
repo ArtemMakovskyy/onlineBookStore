@@ -2,6 +2,7 @@ package online.book.store.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import online.book.store.dto.cart.item.AddBookToTheShoppingCartDto;
 import online.book.store.dto.cart.item.BookQuantityDto;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -42,7 +42,7 @@ public class ShoppingCartController {
             description = "Add book with quantity to the shopping cart")
     public AddBookToTheShoppingCartDto addBookToTheShoppingCart(
             Authentication authentication,
-            @RequestBody AddBookToTheShoppingCartDto addBookDto) {
+            @RequestBody @Valid AddBookToTheShoppingCartDto addBookDto) {
         final User user = (User) authentication.getPrincipal();
         return shoppingCartService.addBook(addBookDto, user.getId());
     }
@@ -51,9 +51,10 @@ public class ShoppingCartController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Update quantity of a book in the shopping cart.",
             description = "Update quantity of a book in the shopping cart by CartItem id")
-    public BookQuantityDto updateBookQuantity(@PathVariable Long cartItemId,
-                                              @RequestParam int quantity) {
-        return shoppingCartService.updateBookQuantity(quantity, cartItemId);
+    public BookQuantityDto updateBookQuantity(
+            @PathVariable Long cartItemId,
+            @RequestBody @Valid BookQuantityDto updateBookQuantityDto) {
+        return shoppingCartService.updateBookQuantity(updateBookQuantityDto, cartItemId);
     }
 
     @DeleteMapping("/cart-items/{cartItemId}")
