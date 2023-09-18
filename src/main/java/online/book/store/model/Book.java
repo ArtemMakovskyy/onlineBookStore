@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -60,5 +61,27 @@ public class Book {
         this.price = price;
         this.description = description;
         this.coverImage = coverImage;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Book book = (Book) o;
+        return Objects.equals(id, book.id)
+                && Objects.equals(title, book.title)
+                && Objects.equals(author, book.author)
+                && Objects.equals(isbn, book.isbn)
+                && Objects.equals(description, book.description)
+                && Objects.equals(coverImage, book.coverImage);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, author, isbn, description, coverImage);
     }
 }
