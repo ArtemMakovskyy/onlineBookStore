@@ -41,6 +41,7 @@ public class UserServiceImpl implements UserService {
                 roleRepository.findById(2L).orElseThrow(
                         () -> new RuntimeException("Can't find ROLE_USER by id"));
         user.setRoles(Set.of(roleUser));
+        // TODO: 14.09.2023 Create ShoppingCart
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setUser(user);
         shoppingCartRepository.save(shoppingCart);
