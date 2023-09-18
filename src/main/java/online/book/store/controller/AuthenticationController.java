@@ -28,7 +28,7 @@ public class AuthenticationController {
             description = "Input email address and password to login.")
     @PostMapping("/login")
     public UserLoginResponseDto login(@RequestBody @Valid UserLoginRequestDto requestDto) {
-        System.out.println(requestDto);
+        System.out.println("login");
         return authenticationService.authenticate(requestDto);
     }
 
