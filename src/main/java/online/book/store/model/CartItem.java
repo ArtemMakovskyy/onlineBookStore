@@ -36,7 +36,7 @@ public class CartItem {
     private Book book;
 
     @Column(nullable = false)
-    private int quantity;
+    private Integer quantity;
 
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
@@ -50,7 +50,7 @@ public class CartItem {
             return false;
         }
         CartItem cartItem = (CartItem) o;
-        return quantity == cartItem.quantity && Objects.equals(book, cartItem.book);
+        return Objects.equals(quantity, cartItem.quantity) && Objects.equals(book, cartItem.book);
     }
 
     @Override
