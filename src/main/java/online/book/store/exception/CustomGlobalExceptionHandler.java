@@ -25,7 +25,6 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
             HttpStatusCode status,
             WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
-
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.BAD_REQUEST);
         final List<String> errors = ex.getBindingResult()
@@ -49,13 +48,36 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler(value = RegistrationException.class)
     protected ResponseEntity<Object> handleRegistrationException(
             RegistrationException ex,
-            WebRequest request
-    ) {
+            WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.BAD_REQUEST);
         body.put("error", "Registration failed. " + ex.getMessage());
         return handleExceptionInternal(ex, body, new HttpHeaders(),
                 HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(value = DataDuplicationException.class)
+    protected ResponseEntity<Object> handleDataDuplicationException(
+            DataDuplicationException ex,
+            WebRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.CONFLICT);
+        body.put("error", "Data already exists  " + ex.getMessage());
+        return handleExceptionInternal(ex, body, new HttpHeaders(),
+                HttpStatus.CONFLICT, request);
+    }
+
+    @ExceptionHandler(value = {EntityNotFoundException.class})
+    protected ResponseEntity<Object> handleEntityNotFoundException(
+            EntityNotFoundException ex,
+            WebRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.NOT_FOUND);
+        body.put("error", "Entity not found. " + ex.getMessage());
+        return handleExceptionInternal(ex, body, new HttpHeaders(),
+                HttpStatus.NOT_FOUND, request);
     }
 }

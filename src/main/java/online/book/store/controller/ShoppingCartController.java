@@ -33,7 +33,7 @@ public class ShoppingCartController {
             description = "Retrieve user's shopping cart with books and quantities")
     public ShoppingCartDto getShoppingCartById(Authentication authentication) {
         final User user = (User) authentication.getPrincipal();
-        return shoppingCartService.getShoppingCartDtoByUserId(user.getId());
+        return shoppingCartService.getShoppingCartByUserId(user.getId());
     }
 
     @PostMapping

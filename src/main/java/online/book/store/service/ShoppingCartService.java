@@ -5,7 +5,7 @@ import online.book.store.dto.cart.item.BookQuantityDto;
 import online.book.store.dto.shopping.cart.ShoppingCartDto;
 
 public interface ShoppingCartService {
-    ShoppingCartDto getShoppingCartDtoByUserId(Long id);
+    ShoppingCartDto getShoppingCartByUserId(Long id);
 
     AddBookToTheShoppingCartDto addBook(AddBookToTheShoppingCartDto createDto, Long userId);
 

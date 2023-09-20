@@ -1,10 +1,10 @@
 package online.book.store.service.impl;
 
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import online.book.store.dto.cart.item.AddBookToTheShoppingCartDto;
 import online.book.store.dto.cart.item.BookQuantityDto;
 import online.book.store.dto.shopping.cart.ShoppingCartDto;
+import online.book.store.exception.DataDuplicationException;
 import online.book.store.exception.EntityNotFoundException;
 import online.book.store.mapper.CartItemMapper;
 import online.book.store.mapper.ShoppingCartMapper;
@@ -26,26 +26,32 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final CartItemMapper cartItemMapper;
 
     @Override
-    public ShoppingCartDto getShoppingCartDtoByUserId(Long id) {
+    public ShoppingCartDto getShoppingCartByUserId(Long id) {
         final ShoppingCart shoppingCart = shoppingCartRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Can't find Shopping Cart by id " + id));
-        final ShoppingCartDto shoppingCartDto = shoppingCartMapper.toDto(shoppingCart);
-        return shoppingCartDto;
+        return shoppingCartMapper.toDto(shoppingCart);
     }
 
     @Override
     public AddBookToTheShoppingCartDto addBook(AddBookToTheShoppingCartDto createDto, Long userId) {
+        final ShoppingCart shoppingCart = shoppingCartRepository.findById(userId).orElseThrow(
+                () -> new EntityNotFoundException("ShoppingCart with id "
+                        + userId + " doesn't exist"));
+
+        for (CartItem cartItem : shoppingCart.getCartItems()) {
+            if (cartItem.getBook().getId().equals(createDto.getBookId())) {
+                throw new DataDuplicationException("The Book with id " + createDto.getBookId()
+                        + " already exists in this cartItem. You should update it.");
+            }
+        }
+
         CartItem cartItem = new CartItem();
         cartItem.setBook(bookRepository.findById(createDto.getBookId())
                 .orElseThrow(() -> new EntityNotFoundException("Can't get book by id "
                         + createDto.getBookId() + " and put it into CartItem")));
         cartItem.setQuantity(createDto.getQuantity());
-        cartItem.setShoppingCart(shoppingCartRepository.findById(userId).get());
-        final CartItem savedCartItem = cartItemRepository.save(cartItem);
-        final ShoppingCart shoppingCart = shoppingCartRepository.findById(userId).get();
-        shoppingCart.setCartItems(Set.of(savedCartItem));
-        shoppingCartRepository.save(shoppingCart);
-        return cartItemMapper.toCreateDto(savedCartItem);
+        cartItem.setShoppingCart(shoppingCart);
+        return cartItemMapper.toCreateDto(cartItemRepository.save(cartItem));
     }
 
     @Override
