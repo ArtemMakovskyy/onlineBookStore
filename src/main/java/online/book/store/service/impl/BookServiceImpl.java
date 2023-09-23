@@ -1,5 +1,7 @@
 package online.book.store.service.impl;
 
+import static online.book.store.util.SortUtil.parseSortOrder;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -43,13 +45,6 @@ public class BookServiceImpl implements BookService {
                 .map(bookMapper::toDto)
                 .collect(Collectors.toList());
         return new PageImpl<>(bookDtoList, pageable, bookRepository.count());
-    }
-
-    private Sort.Order parseSortOrder(String sort) {
-        String[] parts = sort.split(",");
-        String property = parts[0];
-        String direction = parts[1].toUpperCase();
-        return new Sort.Order(Sort.Direction.valueOf(direction), property);
     }
 
     @Override

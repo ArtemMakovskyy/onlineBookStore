@@ -1,5 +1,7 @@
 package online.book.store.service.impl;
 
+import static online.book.store.util.SortUtil.parseSortOrder;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -112,12 +114,5 @@ public class OrderServiceImpl implements OrderService {
         return orderItems.stream()
                 .map(oi -> BigDecimal.valueOf(oi.getQuantity()).multiply(oi.getPrice()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    private Sort.Order parseSortOrder(String sort) {
-        String[] parts = sort.split(",");
-        String property = parts[0];
-        String direction = parts[1].toUpperCase();
-        return new Sort.Order(Sort.Direction.valueOf(direction), property);
     }
 }

@@ -1,13 +1,13 @@
 package online.book.store.service.impl;
 
+import static online.book.store.util.SortUtil.parseSortOrder;
+
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import online.book.store.dto.category.CategoryDto;
 import online.book.store.exception.EntityNotFoundException;
-import online.book.store.mapper.BookMapper;
 import online.book.store.mapper.CategoryMapper;
 import online.book.store.model.Category;
-import online.book.store.repository.book.BookRepository;
 import online.book.store.repository.category.CategoryRepository;
 import online.book.store.service.CategoryService;
 import org.springframework.data.domain.Page;
@@ -20,9 +20,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
-    private final BookRepository bookRepository;
     private final CategoryRepository categoryRepository;
-    private final BookMapper bookMapper;
     private final CategoryMapper categoryMapper;
 
     @Override
@@ -66,10 +64,4 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.deleteById(id);
     }
 
-    private Sort.Order parseSortOrder(String sort) {
-        String[] parts = sort.split(",");
-        String property = parts[0];
-        String direction = parts[1].toUpperCase();
-        return new Sort.Order(Sort.Direction.valueOf(direction), property);
-    }
 }
