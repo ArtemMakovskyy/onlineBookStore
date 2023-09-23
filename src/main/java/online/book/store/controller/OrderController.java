@@ -2,6 +2,7 @@ package online.book.store.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import online.book.store.dto.order.CreateOrderDto;
 import online.book.store.dto.order.OrderDto;
@@ -35,7 +36,7 @@ public class OrderController {
             description = "Place an order.")
     public OrderDto createUsersOrder(
             Authentication authentication,
-            @RequestBody CreateOrderDto createOrderDto) {
+            @RequestBody @Valid CreateOrderDto createOrderDto) {
         final User user = (User) authentication.getPrincipal();
         return orderService.createUserOrder(user.getId(), createOrderDto);
     }
@@ -83,7 +84,7 @@ public class OrderController {
             description = "Update the status of an order.")
     public OrderDto updateOrderStatus(
             @PathVariable Long orderId,
-            @RequestBody UpdateOrderStatusDto updateStatus) {
+            @RequestBody @Valid UpdateOrderStatusDto updateStatus) {
         return orderService.updateOrderStatus(orderId, updateStatus);
     }
 }
