@@ -2,7 +2,10 @@ package online.book.store.util;
 
 import org.springframework.data.domain.Sort;
 
-public class SortUtil {
+public final class SortUtil {
+    private SortUtil() {
+    }
+
     public static Sort.Order parseSortOrder(String sort) {
         String[] parts = sort.split(",");
         String property = parts[0];
