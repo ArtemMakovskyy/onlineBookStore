@@ -13,8 +13,9 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper(config = MapperConfig.class)
+@Mapper(config = MapperConfig.class, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface BookMapper {
 
     BookDto toDto(Book book);
@@ -27,7 +28,7 @@ public interface BookMapper {
     @AfterMapping
     default void setCategoryIds(@MappingTarget BookDto bookDto, Book book) {
         final Set<Long> categoryIds = book.getCategories().stream()
-                .map(category -> category.getId())
+                .map(Category::getId)
                 .collect(Collectors.toSet());
         bookDto.setCategoriesIds(categoryIds);
     }
