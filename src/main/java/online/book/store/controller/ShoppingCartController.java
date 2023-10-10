@@ -9,6 +9,7 @@ import online.book.store.dto.cart.item.BookQuantityDto;
 import online.book.store.dto.shopping.cart.ShoppingCartDto;
 import online.book.store.model.User;
 import online.book.store.service.ShoppingCartService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -61,6 +63,7 @@ public class ShoppingCartController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Remove a book from the shopping cart.",
             description = "Soft delete book from the shopping cart")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long cartItemId) {
         shoppingCartService.deleteCartItem(cartItemId);
     }

@@ -66,6 +66,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public void deleteCartItem(Long cartItemId) {
+        if (!cartItemRepository.findById(cartItemId).isPresent()) {
+            throw new EntityNotFoundException("CartItem by id " + cartItemId
+                    + " does not exist. Cannot delete a non-existent CartItem");
+        }
         cartItemRepository.deleteById(cartItemId);
     }
 }

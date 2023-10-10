@@ -29,7 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
         final List<CategoryDto> categoryDtos = categoryRepository.findAll(pageable).stream()
                 .map(categoryMapper::toDto)
                 .toList();
-        return new PageImpl<>(categoryDtos,pageable,categoryDtos.stream().count());
+        return new PageImpl<>(categoryDtos, pageable, categoryDtos.stream().count());
     }
 
     @Override
@@ -61,7 +61,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteById(Long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new EntityNotFoundException("Category by id " + id
+                    + " does not exist. Cannot delete a non-existent category");
+        }
         categoryRepository.deleteById(id);
     }
-
 }
