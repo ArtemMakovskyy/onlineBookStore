@@ -9,6 +9,7 @@ import online.book.store.dto.category.CategoryDto;
 import online.book.store.service.BookService;
 import online.book.store.service.CategoryService;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Category management", description = "Endpoints to managing categories")
@@ -33,6 +35,7 @@ public class CategoryController {
     @Operation(summary = "Creating a new category.",
             description = "Creating a new category with valid data. "
                     + "Name must be not blank and unique and in addition field description")
+    @ResponseStatus(HttpStatus.CREATED)
     public CategoryDto createCategory(
             @RequestBody @Valid CategoryDto createCategoryDto) {
         return categoryService.save(createCategoryDto);
@@ -64,6 +67,7 @@ public class CategoryController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Deleting category by id",
             description = "Soft deleting available category by id")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCategory(@PathVariable Long id) {
         categoryService.deleteById(id);
     }
