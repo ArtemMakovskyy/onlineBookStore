@@ -34,10 +34,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public AddBookToTheShoppingCartDto addBook(AddBookToTheShoppingCartDto createDto, Long userId) {
-        final ShoppingCart shoppingCart = shoppingCartRepository.findById(userId).orElseThrow(
-                () -> new EntityNotFoundException("ShoppingCart with id "
+        final ShoppingCart shoppingCart = shoppingCartRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("ShoppingCart with id "
                         + userId + " doesn't exist"));
-
         for (CartItem cartItem : shoppingCart.getCartItems()) {
             if (cartItem.getBook().getId().equals(createDto.getBookId())) {
                 throw new DataDuplicationException("The Book with id " + createDto.getBookId()
@@ -51,7 +50,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                         + createDto.getBookId() + " and put it into CartItem")));
         cartItem.setQuantity(createDto.getQuantity());
         cartItem.setShoppingCart(shoppingCart);
-        return cartItemMapper.toCreateDto(cartItemRepository.save(cartItem));
+        final CartItem savedCartItem = cartItemRepository.save(cartItem);
+        return cartItemMapper.toCreateDto(savedCartItem);
     }
 
     @Override

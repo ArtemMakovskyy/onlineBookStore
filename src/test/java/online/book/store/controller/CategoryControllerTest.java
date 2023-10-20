@@ -107,7 +107,7 @@ public class CategoryControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(username = "user", roles = "USER")
     @DisplayName("Find all existent categories")
     void getAllCategories_ShouldReturnAllCategories_Success3() throws Exception {
         // given
@@ -149,7 +149,8 @@ public class CategoryControllerTest {
         when(categoryService.getById(categoryId)).thenReturn(categoryDto);
 
         // When and Then
-        mockMvc.perform(get("/categories/{id}", categoryId)
+        mockMvc.perform(
+                get("/categories/{id}", categoryId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(categoryDto.getName()))
