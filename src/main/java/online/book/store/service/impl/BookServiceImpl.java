@@ -49,6 +49,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void deleteById(Long id) {
+        if (!bookRepository.existsById(id)) {
+            throw new EntityNotFoundException("Book by id " + id
+                    + " does not exist. cannot delete a non-existent book");
+        }
         bookRepository.deleteById(id);
     }
 
@@ -82,7 +86,6 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto save(CreateBookRequestDto requestDto) {
-        System.out.println(requestDto);
         Book savedBook = bookRepository.save(bookMapper.toEntity(requestDto));
         return bookMapper.toDto(savedBook);
     }
