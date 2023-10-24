@@ -2,9 +2,7 @@ package online.book.store.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
@@ -13,10 +11,9 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
-import java.util.Random;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
-
 import online.book.store.dto.cart.item.AddBookToTheShoppingCartDto;
 import online.book.store.dto.cart.item.BookQuantityDto;
 import online.book.store.dto.cart.item.CartItemDto;
@@ -142,7 +139,8 @@ public class ShoppingCartServiceTest {
         //when
         final EntityNotFoundException actualException = assertThrows(
                 EntityNotFoundException.class,
-                () -> shoppingCartService.addBook(any(AddBookToTheShoppingCartDto.class), INVALID_NON_EXISTING_ID));
+                () -> shoppingCartService.addBook(
+                        any(AddBookToTheShoppingCartDto.class), INVALID_NON_EXISTING_ID));
         final String actualExceptionMessage = actualException.getMessage();
 
         //then
@@ -157,9 +155,6 @@ public class ShoppingCartServiceTest {
             """)
     public void addBook_BookDuplicate_ThrowException() {
         //given
-        String expectedDataDuplicationExceptionMessage = "The Book with id " + getBookA().getId()
-                + " already exists in this cartItem. You should update it.";
-
         AddBookToTheShoppingCartDto duplicateBookDto = new AddBookToTheShoppingCartDto();
         duplicateBookDto.setBookId(getBookA().getId());
         int newQuantity = new Random().nextInt(100) + 1;
@@ -169,14 +164,18 @@ public class ShoppingCartServiceTest {
         existedShoppingCart.setCartItems(Set.of(getCartItem()));
 
         Long existingUserId = getUserWithUserRole().getId();
-        when(shoppingCartRepository.findById(existingUserId)).thenReturn(Optional.of(existedShoppingCart));
+        when(shoppingCartRepository.findById(existingUserId))
+                .thenReturn(Optional.of(existedShoppingCart));
 
         //when
         final DataDuplicationException actualException = assertThrows(
                 DataDuplicationException.class, () -> shoppingCartService.addBook(
                         duplicateBookDto, existingUserId));
         final String actualExceptionMessage = actualException.getMessage();
+
         //then
+        String expectedDataDuplicationExceptionMessage = "The Book with id " + getBookA().getId()
+                + " already exists in this cartItem. You should update it.";
         assertEquals(expectedDataDuplicationExceptionMessage,actualExceptionMessage);
         verify(shoppingCartRepository,times(1)).findById(existingUserId);
         verifyNoMoreInteractions(shoppingCartRepository);
