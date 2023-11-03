@@ -41,26 +41,27 @@ books indicating detailed information about the book with a description.*
 - **Description:** Provides endpoints for user authentication and registration.
     - **Login Endpoint:**  *POST*`/api/auth/login`
         - requests for user and admin
-        - ```` 
-      {
-      "email": "user1234@mail.com",
-      "password": "1234"
-      }
         - ````
           {
              "email": "user1234@mail.com",
              "password": "1234" 
           }
+      - ````
+          {
+             "email": "admin1234@mail.com",
+             "password": "1234" 
+          }
     - **Register Endpoint:** *POST*`/api/auth/register`
         - ````
-      {
-      "email": "artem1234@email.com",
-      "password": "1234",
-      "repeatPassword": "1234",
-      "firstName": "Artem",
-      "lastName": "User",
-      "shippingAddress": "right here"
-      }
+          {
+             "email": "artem1234@email.com",
+             "password": "1234",
+             "repeatPassword": "1234",
+             "firstName": "Artem",
+             "lastName": "User",
+             "shippingAddress": "right here"
+          }
+
 - **Functionality:**
     - Allows users to log in by providing their email address and password.
         - Enables users to register by providing their email, password, first name, last name, and shipping address.
@@ -70,29 +71,29 @@ books indicating detailed information about the book with a description.*
 - **Description:** Manages book-related operations.
 - **Endpoints:**
     - **Create Book:** *POST*`/api/books` (Accessible to ROLE_ADMIN only)
-        - ````
-      {
-      "title": "title of book",
-      "author": "author book",
-      "isbn": "book code 123456",
-      "price": 21.99,
-      "description": "This is a sample book description.",
-      "coverImage": "http://example.com/cover1.jpg",
-      "categories": [1,3]
-      }
+      - ````
+        {
+        "title": "title of book",
+        "author": "author book",
+        "isbn": "book code 123456",
+        "price": 21.99,
+        "description": "This is a sample book description.",
+        "coverImage": "http://example.com/cover1.jpg",
+        "categories": [1,3]
+        }
     - **Get All Books:** *GET*`/api/books` (Accessible to ROLE_USER)
     - **Get Book by ID:** *GET*`/api/books/{id}` (Accessible to ROLE_USER)
     - **Update Book:** *PUT*`/api/books/{id}` (Accessible to ROLE_ADMIN)
-        - ````
-      {
-      "title": "new title of book",
-      "author": "author book",
-      "isbn": "book code 123456",
-      "price": 21.99,
-      "description": "This is a sample book description.",
-      "coverImage": "http://example.com/cover1.jpg",
-      "categories": [1,3]
-      }
+      - ````
+        {
+        "title": "new title of book",
+        "author": "author book",
+        "isbn": "book code 123456",
+        "price": 21.99,
+        "description": "This is a sample book description.",
+        "coverImage": "http://example.com/cover1.jpg",
+        "categories": [1,3]
+        }
     - **Delete Book:** *DELETE*`/api/books/{id}` (Accessible to ROLE_ADMIN)
     - **Search Books:** *GET*`/api/books/search?price=10,20` (Accessible to ROLE_USER)
 - **Functionality:**
@@ -104,19 +105,19 @@ books indicating detailed information about the book with a description.*
 - **Description:** Manages book categories.
 - **Endpoints:**
     - **Create Category:** *POST*`/api/categories` (Accessible to ROLE_ADMIN only)
-        - ````
-      {
-      "name":"name",
-      "description":"description"
-      }
+      - ````
+        {
+        "name":"name",
+        "description":"description"
+        }
     - **Get All Categories:** *GET*`/api/categories` (Accessible to ROLE_USER)
     - **Get Category by ID:** *GET*`/api/categories/{id}` (Accessible to ROLE_USER)
     - **Update Category:** *PUT*`/api/categories/{id}` (Accessible to ROLE_ADMIN)
-        - ````
-      {
-      "name":"updeting name",
-      "description":"updeting description"
-      }
+      - ````
+        {
+        "name":"updeting name",
+        "description":"updeting description"
+        }
     - **Delete Category:** *DELETE*`/api/categories/{id}` (Accessible to ROLE_ADMIN)
     - **Get Books by Category ID:** *GET*`/api/categories/{categoryId}/books` (Accessible to ROLE_USER)
 - **Functionality:**
@@ -128,18 +129,18 @@ books indicating detailed information about the book with a description.*
 - **Description:** Manages user orders and order items.
 - **Endpoints:**
     - **Place Order:** *POST*`/api/orders` (Accessible to ROLE_USER)
-        - ````
-      {
-      "shippingAddress": "Kyiv, Shevchenko ave, 1"
-      }
+      - ````
+        {
+        "shippingAddress": "Kyiv, Shevchenko ave, 1"
+        }
     - **View Order History:** *GET*`/api/orders` (Accessible to ROLE_USER)
     - **Get Order Items:** *GET* `/api/orders/{orderId}/items` (Accessible to ROLE_USER)
     - **Get Specific Order Item:** *GET*`/api/orders/{orderId}/items/{itemId}` (Accessible to ROLE_USER)
     - **Update Order Status:** *PATCH*`/api/orders/{orderId}` (Accessible to ROLE_ADMIN)
-        - ````
-      {
-      "status": "DELIVERED"
-      }
+      - ````
+        {
+        "status": "DELIVERED"
+        }
 - **Functionality:**
     - Allows users to place orders, view their order history, and retrieve order items.
     - Supports updating the status of orders by administrators.
@@ -150,17 +151,18 @@ books indicating detailed information about the book with a description.*
 - **Endpoints:**
     - **Get Shopping Cart:** *GET*`/api/cart` (Accessible to ROLE_USER)
     - **Add Book to Cart:** *POST*`/api/cart` (Accessible to ROLE_USER)
-        - ````
+    - ````
       {
-      "quantity":120
-      "quantity":50
+       "quantity":120
+       "quantity":50
       }
+
     - **Update Book Quantity in Cart:** *PUT*`/api/cart/cart-items/{cartItemId}` (Accessible to ROLE_USER)
-        - ````
+  - ````
       {
-      "quantity":55
+       "quantity":55
       }
-    - **Remove Book from Cart:** *DEL*`/api/cart/cart-items/{cartItemId}` (Accessible to ROLE_USER)
+- **Remove Book from Cart:** *DEL*`/api/cart/cart-items/{cartItemId}` (Accessible to ROLE_USER)
 - **Functionality:**
     - Allows users to retrieve their shopping carts, add books to the cart, update book quantities, and remove books
       from the cart.
