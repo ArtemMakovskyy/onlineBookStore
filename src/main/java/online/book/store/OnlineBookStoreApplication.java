@@ -12,5 +12,8 @@ public class OnlineBookStoreApplication {
     public static void main(String[] args) {
         SpringApplication.run(online.book.store.OnlineBookStoreApplication.class, args);
         logger.info("API Documentation Overview: http://localhost:8088/api/swagger-ui/index.html#/");
+        // TODO:  Docker login fails returning
+        //  The stub received bad data" on Windows when using awscli v2. #5636
+        // TODO: 29.11.2023 https://github.com/aws/aws-cli/issues/5636
     }
 }
